@@ -1,0 +1,19 @@
+//This a game of 9X9 tiles in which the rows and columns will have the number 1-9 without repaeat. The game starts with a set number of tiles revealed based on difficulty. The user then selects a number 1-9 for each of the blank tiles to complete the sequence. 
+
+//tile constructor
+//for loop to draw each tile on the screen
+//assignment of numbers 1-9 to all tiles
+label
+//userMouseClicked function to select a number for empty tiles
+assigns user input as value
+//global variables (score, empty array for tiles assignments, empty array for user's input to tiles, ...)
+//getWin function
+//draw function
+//khan button constuctor and class/handleMouseClick
+var tile = function (x, y, width, label, value) {
+    this.x = x,
+    this.y = y,
+    this.width. = width,
+    this.label = label,
+    this.value = value
+};
