@@ -1,19 +1,49 @@
 //This a game of 9X9 tiles in which the rows and columns will have the number 1-9 without repaeat. The game starts with a set number of tiles revealed based on difficulty. The user then selects a number 1-9 for each of the blank tiles to complete the sequence. 
 
 //tile constructor
+var Tile = function (x, y, width, correct, value) {
+    this.x = x;
+    this.y = y;
+    this.width= width;
+    this.correct = correct;//number in block
+    this.value = value;//user inputed number
+    this.constant=false;
+};
+//draw function
+Tile.prototype.draw= function() {
+    fill(0, 255, 221);
+    rect(this.x,this.y,this.width,this.width);
+    fill(0, 0, 0);
+    textSize(20);
+    text(this.value,this.x+9,this.y-9);
+};
+var tiles=[];
 //for loop to draw each tile on the screen
+for (var i=0;i<9;i++){
+    for (var j=0;j<9;j++){
+        tiles.push(new Tile(j*30,i*30,30,round(random(1,9)),""));
+    }
+}
+for (var i=0;i<9;i++){
+    var selected=round(random(0,tiles.length));
+    tiles[selected].constant=true;
+    tiles[selected].value=tiles[selected].correct;
+}
 //assignment of numbers 1-9 to all tiles
-label
+var values=[1,2,3,4,5,6,7,8,9];
+//label
 //userMouseClicked function to select a number for empty tiles
-assigns user input as value
+//assigns user input as value
 //global variables (score, empty array for tiles assignments, empty array for user's input to tiles, ...)
 //getWin function
-//draw function
+for (var i=0;i<tiles.length;i++){
+    tiles[i].draw();
+}
+stroke(0, 0, 0);
+strokeWeight(5);
+line(90,0,90,270);
+line(180,0,180,270);
+line(0,90,270,90);
+line(0,180,270,180);
 //khan button constuctor and class/handleMouseClick
-var tile = function (x, y, width, label, value) {
-    this.x = x,
-    this.y = y,
-    this.width. = width,
-    this.label = label,
-    this.value = value
-};
+
