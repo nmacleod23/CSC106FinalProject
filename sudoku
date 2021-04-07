@@ -25,9 +25,15 @@ for (var i=0;i<9;i++){
     }
 }
 for (var i=0;i<9;i++){
-    var selected=round(random(0,tiles.length));
-    tiles[selected].constant=true;
-    tiles[selected].value=tiles[selected].correct;
+    var selected=round(random(0,tiles.length-1));
+    if (tiles[selected].constant===false){
+        tiles[selected].constant=true;
+        tiles[selected].correct=i+1;
+        tiles[selected].value=tiles[selected].correct;
+    }
+    else{
+        i--;
+    }
 }
 //assignment of numbers 1-9 to all tiles
 var values=[1,2,3,4,5,6,7,8,9];
