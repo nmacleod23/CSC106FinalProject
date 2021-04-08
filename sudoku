@@ -1,13 +1,66 @@
 //This a game of 9X9 tiles in which the rows and columns will have the number 1-9 without repaeat. The game starts with a set number of tiles revealed based on difficulty. The user then selects a number 1-9 for each of the blank tiles to complete the sequence. 
+//sets starting screen to splash screen
+var scene= 0;//scene 0 = splash, 1= game, 2= results
+
+//code for the button object class
+var Button = function(config) {//button object class constructor and methods from Khan
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+Button.prototype.draw = function() {
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(19);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+};
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};//end of code from Khan
+
+//startButton for splash screen
+var startButton = new Button({
+    x: 150,
+    y: 300,
+    width: 90,
+    label: "Start",
+    onClick: function (){
+        scene=1;
+    }
+    
+});
+
+//spalsh screen
+var splash = function (){
+    fill (255, 0, 0);
+    rect (0, 0, 400, 400);
+    fill (0, 0, 0);
+    text ("Sudoku", 100, 50);
+    text ("By Derrien Walters & Neil MacLeod", 51, 100);
+    startButton.draw();
+};
 
 //tile constructor
-var Tile = function (x, y, width, correct, value) {
+var Tile = function (x, y, width, correctValue, currentValue) {
     this.x = x;
     this.y = y;
     this.width= width;
-    this.correct = correct;//number in block
-    this.value = value;//user inputed number
-    this.constant=false;
+    this.correctValue = correctValue;//number in block
+    this.currentValue = currentValue;//user inputed number
+    this.constant=false; //determines if user can change currentValue
 };
 //draw function
 Tile.prototype.draw= function() {
@@ -19,15 +72,16 @@ Tile.prototype.draw= function() {
 };
 var tiles=[];
 //for loop to draw each tile on the screen
-for (var i=0;i<9;i++){
-    for (var j=0;j<9;j++){
-        tiles.push(new Tile(j*30,i*30,30,round(random(1,9)),""));
+for (var row=0;row<9;row++){
+    for (var column=0;column<9;column++){
+        tiles.push(new Tile(column*30,row*30,30,round(random(1,9)),""));
     }
 }
+//for loop to display random 1-9 constant values for 9 random tiles
 for (var i=0;i<9;i++){
     var selected=round(random(0,tiles.length));
     tiles[selected].constant=true;
-    tiles[selected].value=tiles[selected].correct;
+    tiles[selected].value=tiles[selected].correctValue;
 }
 //assignment of numbers 1-9 to all tiles
 var values=[1,2,3,4,5,6,7,8,9];
@@ -36,6 +90,7 @@ var values=[1,2,3,4,5,6,7,8,9];
 //assigns user input as value
 //global variables (score, empty array for tiles assignments, empty array for user's input to tiles, ...)
 //getWin function
+//for loop to draw all that tiles in the tiles array
 for (var i=0;i<tiles.length;i++){
     tiles[i].draw();
 }
