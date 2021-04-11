@@ -1,4 +1,15 @@
 //This a game of 9X9 tiles in which the rows and columns will have the number 1-9 without repaeat. The game starts with a set number of tiles revealed based on difficulty. The user then selects a number 1-9 for each of the blank tiles to complete the sequence. 
+/*  Tile Index Number Matrix
+     0  1  2  3  4  5  6  7  8  
+     9 10 11 12 13 14 15 16 17
+    18 19 20 21 22 23 24 25 26
+    27 28 29 30 31 32 33 34 35
+    36 37 38 39 40 41 42 43 44
+    45 46 47 48 49 50 51 52 53
+    54 55 56 57 58 59 60 61 62
+    63 64 65 66 67 68 69 70 71
+    72 73 74 75 76 77 78 79 80
+*/
 //use https://dingo.sbs.arizona.edu/~sandiway/sudoku/examples.html for sample puzzles
 /*  Easy puzzle
     4 3 5 2 6 9 7 8 1
@@ -13,17 +24,6 @@
     with 36 correctValues dispalyed (4 in each 9x9 square)
 */
 var easyPuzzle=[4,3,5,2,6,9,7,8,1,6,8,2,5,7,1,4,9,3,1,9,7,8,3,4,5,6,2,8,2,6,1,9,5,3,4,7,3,7,4,6,8,2,9,1,5,9,5,1,7,4,3,6,2,8,5,1,9,3,2,6,8,7,4,2,4,8,9,5,7,1,3,6,7,6,3,4,1,8,2,5,9];
-/*  Tile Index Number Matrix
-    1 10 19 28 37 46 55 64 73  
-    2 11 20 29 38 47 56 65 74 
-    3 12 21 30 39 48 57 66 75
-    4 13 22 31 40 49 58 67 76
-    5 14 23 32 41 50 59 68 77
-    6 15 24 33 42 51 60 69 78
-    7 16 25 34 43 52 61 70 79
-    8 17 26 35 44 53 62 71 80
-    9 18 27 36 45 54 63 72 81
-*/
 //sets starting screen to splash screen
 var scene= 0;//scene 0 = splash, 1= game, 2= results
 var drawNeilEar=function(x,y,h){ //functions to draw Neil's bitmojii
@@ -104,8 +104,7 @@ var drawNeilBitmoji=function(x,y,h){
     drawNeilBody(x,y,p);
 };//end of Neil's bitmoji functions
 //Derrien's bitmoji code
-var drawDerrienEars = function (bitmojiX, bitmojiY, bitmojiH)
-    { 
+var drawDerrienEars = function (bitmojiX, bitmojiY, bitmojiH){ 
     //ears
     arc (bitmojiX + (bitmojiH / 100 * 80), bitmojiY + (bitmojiH / 100 * 73), bitmojiH       / 100 * 27, bitmojiH / 100 * 34, 1, 274);//left ear
     arc (bitmojiX + (bitmojiH / 100 * 123), bitmojiY + (bitmojiH / 100 * 73), bitmojiH      / 100 * 27, bitmojiH / 100 * 34, 1, 372);//right ear
@@ -120,164 +119,104 @@ var drawDerrienEars = function (bitmojiX, bitmojiY, bitmojiH)
     //inner ear left
     bezier (bitmojiX + (bitmojiH / 100 * 75), bitmojiY + (bitmojiH / 100 * 82), bitmojiX     + (bitmojiH / 100 * 66), bitmojiY + (bitmojiH / 100 * 67), bitmojiX + (bitmojiH /       100 * 73), bitmojiY + (bitmojiH / 100 * 76), bitmojiX + (bitmojiH / 100 * 73),          bitmojiY + (bitmojiH / 100 * 73));
 };
-var drawDerrienEyes = function (bitmojiX, bitmojiY, bitmojiH)
-{
+var drawDerrienEyes = function (bitmojiX, bitmojiY, bitmojiH){
     //changed stroke for eye outline to try and show eyelids
     stroke(196, 147, 147);
-    
     //whites of eyes
     fill (255,255,255);
-    
     //left eye
     ellipse (bitmojiX + (bitmojiH / 100 * 86), bitmojiY + (bitmojiH / 100 * 64),            bitmojiH / 100 * 15, bitmojiH / 100 * 8);
-    
     //right eye
     ellipse (bitmojiX + (bitmojiH / 100 * 112), bitmojiY + (bitmojiH / 100 * 64),           bitmojiH / 100 * 15, bitmojiH / 100 * 8);
-    
     //change stroke for eyecolor outline
     stroke(76, 105, 78);
-    
     //eye color
     fill (9, 110, 32);
-    
     //left iris
     ellipse (bitmojiX + (bitmojiH / 100 * 86), bitmojiY + (bitmojiH / 100 * 64),            bitmojiH / 100 * 6, bitmojiH / 100 * 6);
-    
     //right iris
     ellipse (bitmojiX + (bitmojiH / 100 * 112), bitmojiY + (bitmojiH / 100 * 64),           bitmojiH / 100 * 6, bitmojiH / 100 * 6);
-    
     //change stroke for no pupil outline
     noStroke();
-    
     //pupils
     fill (0,0,0);
-    
     //left pupil
     ellipse (bitmojiX + (bitmojiH / 100 * 86), bitmojiY + (bitmojiH / 100 * 64),            bitmojiH / 100 * 2, bitmojiH / 100 * 2);
-    
     //right pupil
     ellipse (bitmojiX + (bitmojiH / 100 * 112), bitmojiY + (bitmojiH / 100 * 64),           bitmojiH / 100 * 2, bitmojiH / 100 * 2);
-    
 };
-
-//detail is nose, mouth, chin
-var drawDerrienDetail = function (bitmojiX, bitmojiY, bitmojiH)
-{
+var drawDerrienDetail = function (bitmojiX, bitmojiY, bitmojiH){
     //nose
     stroke(0, 0, 0);
-    
     fill(245, 228, 199);
-    
     //arc for bottom of nose and line for bridge
     arc (bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 82), bitmojiH      / 100 * 10, bitmojiH / 100 * 8, 0, 180);
-    
     line (bitmojiX + (bitmojiH / 100 * 106), bitmojiY + (bitmojiH / 100 * 82), bitmojiX     + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 64));
-    
     //mouth
     stroke(196, 147, 147);
-    
     fill(255, 255, 255);
-    
     arc (bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 100), bitmojiH     / 100 * 23, bitmojiH / 100 * 7, 0, 180);
-    
     //chin
     stroke(196, 147, 147);
-    
     fill(237, 225, 225);
-    
     arc(bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 109), bitmojiH      / 100 * 16, bitmojiH / 100 * 7, 0, 180);
-
-};
-
-var drawDerrienHead= function (bitmojiX, bitmojiY, bitmojiH)
-{
+};//detail is nose, mouth, chin
+var drawDerrienHead= function (bitmojiX, bitmojiY, bitmojiH){
     noStroke();
-    
     //head and neck follows changed fill to skintone
     fill(245, 228, 199);
-    
     //neck
     rect (bitmojiX + (bitmojiH / 100 * 86), bitmojiY + (bitmojiH / 100 * 100), bitmojiH     / 100 * 30, bitmojiH / 100 * 50);
-    
     //face background
     ellipse (bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 75),           bitmojiH / 100 * 60, bitmojiH / 100 * 80);
-    
     drawDerrienEars (bitmojiX, bitmojiY, bitmojiH);
     drawDerrienEyes (bitmojiX, bitmojiY, bitmojiH);
     drawDerrienDetail (bitmojiX, bitmojiY, bitmojiH);
-    
 };
-
-var drawDerrienShirt = function (bitmojiX, bitmojiY, bitmojiH)
-{
-      //red shirt
+var drawDerrienShirt = function (bitmojiX, bitmojiY, bitmojiH){
+    //red shirt
     noStroke ();
     fill (255, 0, 0);
-    
     //center
-    rect (bitmojiX + (bitmojiH / 65 * 68), bitmojiY + (bitmojiH / 81 * 120), bitmojiH     / 100 * 68, bitmojiH / 100 * 55);
-    
+    rect (bitmojiX + (bitmojiH / 65 * 48), bitmojiY + (bitmojiH / 81 * 97), bitmojiH        /100 * 68, bitmojiH / 100 * 55);
     //right shoulder
     quad (bitmojiX + (bitmojiH / 100 * 129), bitmojiY + (bitmojiH / 100 * 108),bitmojiX     + (bitmojiH / 100 * 164), bitmojiY + (bitmojiH / 100 * 124), bitmojiX + (bitmojiH       / 100 * 175), bitmojiY + (bitmojiH / 100 * 174), bitmojiX + (bitmojiH / 100 * 132       ), bitmojiY + (bitmojiH / 100 * 175));
-    
     //left shoulder
     quad (bitmojiX + (bitmojiH / 100 * 72), bitmojiY + (bitmojiH / 100 * 110), bitmojiX     + (bitmojiH / 100 * 39), bitmojiY + (bitmojiH / 100 * 122), bitmojiX + (bitmojiH /      100 * 25), bitmojiY + (bitmojiH / 100 * 175), bitmojiX + (bitmojiH / 100 * 81           ), bitmojiY + (bitmojiH / 100 * 174));
-    
     //undershirt
     fill(255, 255, 255);
-    
     triangle (bitmojiX + (bitmojiH / 100 * 127), bitmojiY + (bitmojiH / 100 * 120           ), bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 144), bitmojiX       + (bitmojiH / 100 * 76), bitmojiY + (bitmojiH / 100 * 119));
-    
     //changing stroke and fill to make collar
     stroke(0, 0, 0);
-    
     fill(255, 0, 0);
-    
     //collar left
     triangle (bitmojiX + (bitmojiH / 100 * 77), bitmojiY + (bitmojiH / 100 * 101            ), bitmojiX + (bitmojiH / 100 * 90), bitmojiY + (bitmojiH / 100 * 133), bitmojiX        + (bitmojiH / 100 * 65), bitmojiY + (bitmojiH / 100 * 112));
-    
     //collar right
     triangle (bitmojiX + (bitmojiH / 100 * 124), bitmojiY + (bitmojiH / 100 * 101           ), bitmojiX + (bitmojiH / 100 * 136), bitmojiY + (bitmojiH / 100 * 117), bitmojiX       + (bitmojiH / 100 * 112), bitmojiY + (bitmojiH / 100 * 133));
-    
     //setting up text size and color
-    textSize(40);
-    
+    textSize(20);
     fill(250, 250, 250);
-    
     text ("DW", bitmojiX + (bitmojiH / 100 * 69), bitmojiY + (bitmojiH / 100 * 144          ) , bitmojiH / 100 * 50, bitmojiH / 100 * 50);
-    
     //resetting text size and fill after initials are drawn
     textSize(15);
     fill(0, 0, 0);
 };
-
-var drawDerrienHat = function (bitmojiX, bitmojiY, bitmojiH)
-{
+var drawDerrienHat = function (bitmojiX, bitmojiY, bitmojiH){
     //hat
     stroke(0, 0, 0);
-    
     fill(40, 4, 125);
-    
     //hat body
     arc (bitmojiX + (bitmojiH / 100 * 102), bitmojiY + (bitmojiH / 100 * 48), bitmojiH      / 100 * 59, bitmojiH / 100 * 44, -197, 28);
-
     noFill();
-    
     //bill
     arc (bitmojiX + (bitmojiH / 100 * 100), bitmojiY + (bitmojiH / 100 * 48), bitmojiH      / 100 * 58, bitmojiH / 100 * 20, -217, 47);
-    
 };
-
-var drawDerrienBitmoji = function (bitmojiX, bitmojiY, bitmojiH)
-{
+var drawDerrienBitmoji = function (bitmojiX, bitmojiY, bitmojiH){
     drawDerrienHead(bitmojiX, bitmojiY, bitmojiH);
-    
     drawDerrienHat(bitmojiX, bitmojiY, bitmojiH);
-    
     drawDerrienShirt(bitmojiX, bitmojiY, bitmojiH);
 };
-            //end of Derrien bitmoji code
-
+//end of Derrien bitmoji code
 //code for the button object class
 var Button = function(config) {//button object class constructor and methods from Khan
     this.x = config.x || 0;
@@ -293,7 +232,7 @@ Button.prototype.draw = function() {
     fill(0, 0, 0);
     textSize(19);
     textAlign(LEFT, TOP);
-    text(this.label, this.x+10, this.y+this.height/4);
+    text(this.label, this.x+24, this.y+this.height/4);
 };
 Button.prototype.isMouseInside = function() {
     return mouseX > this.x &&
@@ -306,7 +245,7 @@ Button.prototype.handleMouseClick = function() {
         this.onClick();
     }
 };//end of code from Khan
-
+var selectedNumber ="";
 //startButton for splash screen
 var startButton = new Button({
     x: 150,
@@ -318,6 +257,108 @@ var startButton = new Button({
     }
     
 });
+//1-9 Buttons for game screen
+var oneButton = new Button({
+    x: 22,
+    y: 300,
+    width: 35,
+    label: "1",
+    onClick: function (){
+        selectedNumber = 1;
+    }
+    
+});
+var twoButton = new Button({
+    x: 67,
+    y: 300,
+    width: 35,
+    label: "2",
+    onClick: function (){
+        selectedNumber = 2;
+    }
+    
+});
+var threeButton = new Button({
+    x: 109,
+    y: 300,
+    width: 35,
+    label: "3",
+    onClick: function (){
+        selectedNumber = 3;
+    }
+    
+});
+var fourButton = new Button({
+    x: 148,
+    y: 300,
+    width: 35,
+    label: "4",
+    onClick: function (){
+        selectedNumber = 4;
+    }
+    
+});
+var fiveButton = new Button({
+    x: 188,
+    y: 300,
+    width: 35,
+    label: "5",
+    onClick: function (){
+       selectedNumber = 5;
+    }
+    
+});
+var sixButton = new Button({
+    x: 227,
+    y: 300,
+    width: 35,
+    label: "6",
+    onClick: function (){
+        selectedNumber = 6;
+    }
+    
+});
+var sevenButton = new Button({
+    x: 268,
+    y: 300,
+    width: 35,
+    label: "7",
+    onClick: function (){
+        selectedNumber = 7;
+    }
+    
+});
+var eightButton = new Button({
+    x: 308,
+    y: 300,
+    width: 35,
+    label: "8",
+    onClick: function (){
+        selectedNumber = 8;
+    }
+    
+});
+var nineButton = new Button({
+    x: 347,
+    y: 300,
+    width: 35,
+    label: "9",
+    onClick: function (){
+        selectedNumber = 9;
+    }
+    
+});
+var drawNumberButtons = function (){
+    oneButton.draw();
+    twoButton.draw();
+    threeButton.draw();
+    fourButton.draw();
+    fiveButton.draw();
+    sixButton.draw();
+    sevenButton.draw();
+    eightButton.draw();
+    nineButton.draw();
+};
 
 //spalsh screen
 var splash = function (){
@@ -330,7 +371,7 @@ var splash = function (){
     text ("By Derrien Walters & Neil MacLeod", 50, 100);
     startButton.draw();
     drawNeilBitmoji(43,299,50);
-    drawDerrienBitmoji(273,252,60);
+    drawDerrienBitmoji(273,263,60);
 };
 
 //tile constructor
@@ -341,6 +382,11 @@ var Tile = function (x, y, width, correctValue, currentValue) {
     this.correctValue = correctValue;//number in block
     this.currentValue = currentValue;//user inputed number
     this.constant=false; //determines if user can change currentValue
+    this.onClick = function() {
+        if (!this.constant){
+            this.currentValue = selectedNumber;
+        }
+    };
 };
 //draw function
 Tile.prototype.draw= function() {
@@ -354,6 +400,17 @@ Tile.prototype.draw= function() {
     }
     textSize(20);
     text(this.currentValue,this.x+9,this.y+5);
+};
+Tile.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.width);
+};
+Tile.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
 };
 var tiles=[];
 //for loop to draw each tile on the screen
@@ -416,8 +473,33 @@ mouseClicked=function(){
     if (scene===0){
         startButton.handleMouseClick();
     }
+    else if (scene===1){
+        for (var i=0;i<81;i++){
+            tiles[i].handleMouseClick();
+        oneButton.handleMouseClick();
+        twoButton.handleMouseClick();
+        threeButton.handleMouseClick();
+        fourButton.handleMouseClick();
+        fiveButton.handleMouseClick();
+        sixButton.handleMouseClick();
+        sevenButton.handleMouseClick();
+        eightButton.handleMouseClick();
+        nineButton.handleMouseClick();
+    }
+    }
 };
-//getWin function
+//checkWin function
+var checkWin = function(){
+    var winCount=0;
+    for (var i=0;i<81;i++){
+        if(easyPuzzle[i]===tiles[i].currentValue){
+            winCount++;
+        }
+        if (winCount===81){
+            scene=2;
+        }
+    }
+};
 var drawGame=function(){//draw game screen
     background(255, 255, 255);
     for (var i=0;i<tiles.length;i++){ //for loop to draw all that tiles in the tiles array
@@ -432,6 +514,8 @@ var drawGame=function(){//draw game screen
     strokeWeight(1);
     drawNeilBitmoji(322,50,50);
     drawDerrienBitmoji(275,121,60);
+    drawNumberButtons();
+    
 };
 var winScreen=function(){//draw win screen
     background(172, 9, 184);
@@ -440,12 +524,14 @@ var winScreen=function(){//draw win screen
     text("You win!",139,200);
 };
 //khan button constuctor and class/handleMouseClick
+scene=1;
 draw= function() {
     if (scene===0){
         splash();
     }
     else if (scene===1){
         drawGame();
+        checkWin();
     }
     else if (scene===2){
         winScreen();
