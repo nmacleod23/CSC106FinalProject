@@ -25,7 +25,8 @@
 */
 var easyPuzzle=[4,3,5,2,6,9,7,8,1,6,8,2,5,7,1,4,9,3,1,9,7,8,3,4,5,6,2,8,2,6,1,9,5,3,4,7,3,7,4,6,8,2,9,1,5,9,5,1,7,4,3,6,2,8,5,1,9,3,2,6,8,7,4,2,4,8,9,5,7,1,3,6,7,6,3,4,1,8,2,5,9];
 //sets starting screen to splash screen
-var scene= 0;//scene 0 = splash, 1= game, 2= results
+var scene= 0;//scene 0 = splash, 1= game, 2= results, 3= how to play
+var selectedButton="";//button currently selected
 var drawNeilEar=function(x,y,h){ //functions to draw Neil's bitmojii
     ellipse(x,y,6*h,18*h);
 };
@@ -224,10 +225,16 @@ var Button = function(config) {//button object class constructor and methods fro
     this.width = config.width || 150;
     this.height = config.height || 50;
     this.label = config.label || "Click";
+    this.color=config.color||color(0, 234, 255);
     this.onClick = config.onClick || function() {};
 };
 Button.prototype.draw = function() {
-    fill(0, 234, 255);
+    if (this===selectedButton){
+        fill(237, 177, 73);
+    }
+    else{
+        fill(0, 234, 255);
+    }
     rect(this.x, this.y, this.width, this.height, 5);
     fill(0, 0, 0);
     textSize(19);
@@ -245,17 +252,33 @@ Button.prototype.handleMouseClick = function() {
         this.onClick();
     }
 };//end of code from Khan
-var selectedNumber ="";
+var selectedNumber ="";//number currently selected
 //startButton for splash screen
 var startButton = new Button({
     x: 150,
-    y: 300,
+    y: 250,
     width: 90,
     label: "Start",
     onClick: function (){
         scene=1;
     }
     
+});
+var instructionsButton=new Button({//button for How to Play
+    x: 114,
+    y: 310,
+    label: "How to Play",
+    onClick: function(){
+        scene=3;
+    }
+});
+var returnButton=new Button({//Go back to splash screen
+    x:120,
+    y:300,
+    label:"Back to Start",
+    onClick: function(){
+        scene=0;
+    }
 });
 //1-9 Buttons for game screen
 var oneButton = new Button({
@@ -265,6 +288,7 @@ var oneButton = new Button({
     label: "1",
     onClick: function (){
         selectedNumber = 1;
+        selectedButton=this;
     }
     
 });
@@ -275,6 +299,7 @@ var twoButton = new Button({
     label: "2",
     onClick: function (){
         selectedNumber = 2;
+        selectedButton=this;
     }
     
 });
@@ -285,6 +310,7 @@ var threeButton = new Button({
     label: "3",
     onClick: function (){
         selectedNumber = 3;
+        selectedButton=this;
     }
     
 });
@@ -295,6 +321,7 @@ var fourButton = new Button({
     label: "4",
     onClick: function (){
         selectedNumber = 4;
+        selectedButton=this;
     }
     
 });
@@ -305,6 +332,7 @@ var fiveButton = new Button({
     label: "5",
     onClick: function (){
        selectedNumber = 5;
+       selectedButton=this;
     }
     
 });
@@ -315,6 +343,7 @@ var sixButton = new Button({
     label: "6",
     onClick: function (){
         selectedNumber = 6;
+        selectedButton=this;
     }
     
 });
@@ -325,6 +354,7 @@ var sevenButton = new Button({
     label: "7",
     onClick: function (){
         selectedNumber = 7;
+        selectedButton=this;
     }
     
 });
@@ -335,6 +365,7 @@ var eightButton = new Button({
     label: "8",
     onClick: function (){
         selectedNumber = 8;
+        selectedButton=this;
     }
     
 });
@@ -345,10 +376,11 @@ var nineButton = new Button({
     label: "9",
     onClick: function (){
         selectedNumber = 9;
+        selectedButton=this;
     }
     
 });
-var drawNumberButtons = function (){
+var drawNumberButtons = function (){//draw all 9 number buttons
     oneButton.draw();
     twoButton.draw();
     threeButton.draw();
@@ -370,10 +402,16 @@ var splash = function (){
     textSize(20);
     text ("By Derrien Walters & Neil MacLeod", 50, 100);
     startButton.draw();
+    instructionsButton.draw();
     drawNeilBitmoji(43,299,50);
     drawDerrienBitmoji(273,263,60);
 };
-
+var drawHowToPlay=function(){//draw the instructions
+    background(27, 143, 129);
+    fill(0, 0, 0);
+    text("Click on a number button to select that number. Then click on a tile to fill that tile with the number. Red numbered tiles cannot be changed. When each row column and 3x3 square contain each digit with no repeats, the puzzle is solved",10,90,400,200);
+    returnButton.draw();
+};
 //tile constructor
 var Tile = function (x, y, width, correctValue, currentValue) {
     this.x = x;
@@ -472,6 +510,7 @@ var values=[1,2,3,4,5,6,7,8,9];
 mouseClicked=function(){
     if (scene===0){
         startButton.handleMouseClick();
+        instructionsButton.handleMouseClick();
     }
     else if (scene===1){
         for (var i=0;i<81;i++){
@@ -485,7 +524,10 @@ mouseClicked=function(){
         sevenButton.handleMouseClick();
         eightButton.handleMouseClick();
         nineButton.handleMouseClick();
+        }
     }
+    else if (scene===3){
+        returnButton.handleMouseClick();
     }
 };
 //checkWin function
@@ -524,7 +566,6 @@ var winScreen=function(){//draw win screen
     text("You win!",139,200);
 };
 //khan button constuctor and class/handleMouseClick
-scene=1;
 draw= function() {
     if (scene===0){
         splash();
@@ -535,5 +576,8 @@ draw= function() {
     }
     else if (scene===2){
         winScreen();
+    }
+    else if (scene===3){
+        drawHowToPlay();
     }
 };
