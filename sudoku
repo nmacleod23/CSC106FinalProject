@@ -77,6 +77,7 @@ var hardPuzzle=[
     8, 4, 5, 2, 1, 9, 3, 6, 7,
     9, 1, 3, 7, 6, 8, 5, 2, 4,
     6, 2, 7, 4, 3, 5, 1, 9, 8];
+//constants seen below are index numbers for the tiles we want to display for the given puzzle
 var easyConstant=[3,4,6,8,9,10,13,16,18,19,23,24,27,28,30,34,38,39,41,42,46,50,52,53,56,57,61,62,64,67,70,71,72,74,76,77];
 var intermediateConstant=[1,3,5,9,10,14,15,22,27,28,33,36,44,47,52,53,58,65,66,70,71,75,77,79];
 var hardConstant=[3,6,9,14,15,22,23,25,37,39,40,44,48,50,52,53,55,57,61,63,65,73,78];
@@ -86,8 +87,9 @@ puzzleArray.push(hardPuzzle);
 //sets starting screen to splash screen
 var scene= 0;//scene 0 = splash, 1= game, 2= results, 3= how to play
 var selectedButton="";//button currently selected
-var selectedDifficulty;
+var selectedDifficulty;// 0=easy, 1=intermediate, 2=hard
 var timer=0;
+var selectedNumber ="";//number currently selected
 var drawNeilEar=function(x,y,h){ //functions to draw Neil's bitmojii
     ellipse(x,y,6*h,18*h);
 };
@@ -279,7 +281,6 @@ var drawDerrienBitmoji = function (bitmojiX, bitmojiY, bitmojiH){
     drawDerrienShirt(bitmojiX, bitmojiY, bitmojiH);
 };
 //end of Derrien bitmoji code
-//code for the button object class
 var Button = function(config) {//button object class constructor and methods from Khan
     this.x = config.x || 0;
     this.y = config.y || 0;
@@ -290,7 +291,7 @@ var Button = function(config) {//button object class constructor and methods fro
     this.onClick = config.onClick || function() {};
 };
 Button.prototype.draw = function() {
-    if (this===selectedButton){
+    if (this===selectedButton){//changes color for the 1-9 button that is selected
         fill(237, 177, 73);
     }
     else{
@@ -313,7 +314,6 @@ Button.prototype.handleMouseClick = function() {
         this.onClick();
     }
 };//end of code from Khan
-var selectedNumber ="";//number currently selected
 var instructionsButton=new Button({//button for How to Play
     x: 114,
     y: 310,
@@ -454,6 +454,7 @@ var Tile = function (x, y, width, correctValue, currentValue) {
     this.correctValue = correctValue;//number in block
     this.currentValue = currentValue;//user inputed number
     this.constant=false; //determines if user can change currentValue
+    this.color= color(0, 255, 221);
     this.onClick = function() {
         if (!this.constant){
             this.currentValue = selectedNumber;
@@ -462,13 +463,13 @@ var Tile = function (x, y, width, correctValue, currentValue) {
 };
 //draw function
 Tile.prototype.draw= function() {
-    fill(0, 255, 221);
+    fill(this.color);
     rect(this.x,this.y,this.width,this.width);
-    if (this.constant){
+    if (this.constant){//sets fill for constant numbers
         fill(255, 0, 0);
     }
     else{
-        fill(0, 0, 0);
+        fill(0, 0, 0);//sets fill for nonconstant numbers
     }
     textSize(20);
     text(this.currentValue,this.x+9,this.y+5);
@@ -556,6 +557,40 @@ var hardButton = new Button({
         }
     }
 });
+var checkButton = new Button({
+    x: 124,
+    y: 355,
+    width: 169,
+    label: "Check Answers",
+    onClick: function (){
+        for (var i=0;i<81;i++){
+            if (selectedDifficulty===0){
+                if(easyPuzzle[i]===tiles[i].currentValue){
+                    tiles[i].color=color(30, 255, 5);
+                }
+                else if (easyPuzzle[i]!==tiles[i].currentValue){
+                    tiles[i].color=color(247, 3, 68);
+                }
+            }
+            else if (selectedDifficulty===1){
+                if(intermediatePuzzle[i]===tiles[i].currentValue){
+                    tiles[i].color=color(30, 255, 5);
+                }
+                else if (intermediatePuzzle[i]!==tiles[i].currentValue){
+                    tiles[i].color=color(247, 3, 68);
+                }
+            }
+            else if (selectedDifficulty===2){
+                if(hardPuzzle[i]===tiles[i].currentValue){
+                    tiles[i].color=color(30, 255, 5);
+                }
+                else if (hardPuzzle[i]!==tiles[i].currentValue){
+                    tiles[i].color=color(247, 3, 68);
+                }
+            }
+        }
+    }
+});
 //spalsh screen
 var splash = function (){
     fill (225, 255, 0);
@@ -572,13 +607,6 @@ var splash = function (){
     drawNeilBitmoji(43,299,50);
     drawDerrienBitmoji(273,263,60);
 };
-//for loop to display random 1-9 constant values for 9 random tiles
-//assignment of numbers 1-9 to all tiles
-var values=[1,2,3,4,5,6,7,8,9];
-//label
-//userMouseClicked function to select a number for empty tiles
-//assigns user input as value
-//global variables (score, empty array for tiles assignments, empty array for user's input to tiles, ...)
 mouseClicked=function(){
     if (scene===0){
         easyButton.handleMouseClick();
@@ -598,6 +626,7 @@ mouseClicked=function(){
         sevenButton.handleMouseClick();
         eightButton.handleMouseClick();
         nineButton.handleMouseClick();
+        checkButton.handleMouseClick();
         }
     }
     else if (scene===3){
@@ -645,6 +674,7 @@ var drawGame=function(){//draw game screen
     drawNumberButtons();
     text("Time: "+round(timer),283,239);
     timer+=0.01;
+    checkButton.draw();
 };
 var winScreen=function(){//draw win screen
     background(172, 9, 184);
@@ -654,7 +684,6 @@ var winScreen=function(){//draw win screen
     textSize(15);
     text("Your time was "+round(timer)+" seconds.",116,260);
 };
-//khan button constuctor and class/handleMouseClick
 draw= function() {
     if (scene===0){
         splash();
