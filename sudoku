@@ -492,29 +492,16 @@ for (var row=0;row<9;row++){
         tiles.push(new Tile(column*30,row*30,30,"",""));
     }
 }
-
 var valueTiles=function(){
-    if (selectedDifficulty===0){
-        for (var i=0;i<easyPuzzle.length;i++){//add correct values
-            tiles[i].correctValue=easyPuzzle[i];
-        }
-    }
-    else if (selectedDifficulty===1){
-        for (var i=0;i<intermediatePuzzle.length;i++){//add correct values
-            tiles[i].correctValue=intermediatePuzzle[i];
-        }
-    }
-    else if (selectedDifficulty===2){
-        for (var i=0;i<hardPuzzle.length;i++){//add correct values
-            tiles[i].correctValue=hardPuzzle[i];
-        }
+    for (var i=0;i<puzzleArray[selectedDifficulty].length;i++){//add correct values
+            tiles[i].correctValue=puzzleArray[selectedDifficulty][i];
     }
 };
-var selectConstant=function(picked){
+var selectConstant=function(picked){//function to set constant tiles
     tiles[picked].constant=true;
     tiles[picked].currentValue=tiles[picked].correctValue;
 };
-//startButton for splash screen
+//difficulty Buttons for splash screen
 var easyButton = new Button({
     x: 33,
     y: 197,
@@ -557,36 +544,18 @@ var hardButton = new Button({
         }
     }
 });
-var checkButton = new Button({
+var checkButton = new Button({//button to check if tiles are correct or not
     x: 124,
     y: 355,
     width: 169,
     label: "Check Answers",
     onClick: function (){
         for (var i=0;i<81;i++){
-            if (selectedDifficulty===0){
-                if(easyPuzzle[i]===tiles[i].currentValue){
-                    tiles[i].color=color(30, 255, 5);
-                }
-                else if (easyPuzzle[i]!==tiles[i].currentValue){
-                    tiles[i].color=color(247, 3, 68);
-                }
+            if(puzzleArray[selectedDifficulty][i]===tiles[i].currentValue){
+                tiles[i].color=color(30, 255, 5);
             }
-            else if (selectedDifficulty===1){
-                if(intermediatePuzzle[i]===tiles[i].currentValue){
-                    tiles[i].color=color(30, 255, 5);
-                }
-                else if (intermediatePuzzle[i]!==tiles[i].currentValue){
-                    tiles[i].color=color(247, 3, 68);
-                }
-            }
-            else if (selectedDifficulty===2){
-                if(hardPuzzle[i]===tiles[i].currentValue){
-                    tiles[i].color=color(30, 255, 5);
-                }
-                else if (hardPuzzle[i]!==tiles[i].currentValue){
-                    tiles[i].color=color(247, 3, 68);
-                }
+            else if (puzzleArray[selectedDifficulty][i]!==tiles[i].currentValue){
+                tiles[i].color=color(247, 3, 68);
             }
         }
     }
@@ -637,20 +606,8 @@ mouseClicked=function(){
 var checkWin = function(){
     var winCount=0;
     for (var i=0;i<81;i++){
-        if (selectedDifficulty===0){
-            if(easyPuzzle[i]===tiles[i].currentValue){
-                winCount++;
-            }
-        }
-        else if (selectedDifficulty===1){
-            if(intermediatePuzzle[i]===tiles[i].currentValue){
-                winCount++;
-            }
-        }
-        else if (selectedDifficulty===2){
-            if(hardPuzzle[i]===tiles[i].currentValue){
-                winCount++;
-            }
+        if(puzzleArray[selectedDifficulty][i]===tiles[i].currentValue){
+            winCount++;
         }
     }
     if (winCount===81){
@@ -684,7 +641,7 @@ var winScreen=function(){//draw win screen
     textSize(15);
     text("Your time was "+round(timer)+" seconds.",116,260);
 };
-draw= function() {
+draw= function() {//draw the game scenes
     if (scene===0){
         splash();
     }
