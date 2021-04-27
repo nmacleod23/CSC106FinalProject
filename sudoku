@@ -88,7 +88,8 @@ puzzleArray.push(hardPuzzle);
 var scene= 0;//scene 0 = splash, 1= game, 2= results, 3= how to play
 var selectedButton="";//button currently selected
 var selectedDifficulty;// 0=easy, 1=intermediate, 2=hard
-var timer=0;
+var timeStamp=0;// time stamp of milliseconds when easy, intermediate, or hard is clicked
+var finishTime=0;
 var selectedNumber ="";//number currently selected
 var drawNeilEar=function(x,y,h){ //functions to draw Neil's bitmojii
     ellipse(x,y,6*h,18*h);
@@ -511,6 +512,7 @@ var easyButton = new Button({
         scene=1;
         selectedDifficulty=0;
         valueTiles();
+        timeStamp=millis();
         for (var i=0;i<easyConstant.length;i++){
             selectConstant(easyConstant[i]);
         }
@@ -525,6 +527,7 @@ var intermediateButton = new Button({
         scene=1;
         selectedDifficulty=1;
         valueTiles();
+        timeStamp=millis();
         for (var i=0;i<intermediateConstant.length;i++){
             selectConstant(intermediateConstant[i]);
         }
@@ -539,6 +542,7 @@ var hardButton = new Button({
         scene=1;
         selectedDifficulty=2;
         valueTiles();
+        timeStamp=millis();
         for (var i=0;i<hardConstant.length;i++){
             selectConstant(hardConstant[i]);
         }
@@ -611,7 +615,18 @@ var checkWin = function(){
         }
     }
     if (winCount===81){
+        finishTime=millis()-timeStamp;
         scene=2;
+    }
+};
+var checkValid=function(){
+    for (var i=0;i<81;i++){
+        if(puzzleArray[0][i]===tiles[i].currentValue){
+            tiles[i].color=color(30, 255, 5);
+        }
+        else if (puzzleArray[0][i]!== tiles[i].currentValue){
+            tiles[i].color=color(247, 3, 68);
+        }
     }
 };
 var drawGame=function(){//draw game screen
@@ -629,8 +644,7 @@ var drawGame=function(){//draw game screen
     drawNeilBitmoji(322,50,50);
     drawDerrienBitmoji(275,121,60);
     drawNumberButtons();
-    text("Time: "+round(timer),283,239);
-    timer+=0.01;
+    text("Time: "+round((millis()-timeStamp)/1000),283,239);
     checkButton.draw();
 };
 var winScreen=function(){//draw win screen
@@ -639,7 +653,7 @@ var winScreen=function(){//draw win screen
     textSize(30);
     text("You win!",139,200);
     textSize(15);
-    text("Your time was "+round(timer)+" seconds.",116,260);
+    text("Your time was "+round(finishTime/1000)+" seconds.",116,260);
 };
 draw= function() {//draw the game scenes
     if (scene===0){
@@ -648,6 +662,9 @@ draw= function() {//draw the game scenes
     else if (scene===1){
         drawGame();
         checkWin();
+        if (selectedDifficulty===0){
+            checkValid();
+        }
     }
     else if (scene===2){
         winScreen();
